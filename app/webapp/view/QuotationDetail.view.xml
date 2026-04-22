@@ -1,0 +1,53 @@
+<mvc:View
+  controllerName="freshbox.o2c.app.controller.QuotationDetail"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:f="sap.ui.layout.form">
+
+  <Page title="Quotation Detail" showNavButton="true" navButtonPress=".onNavBack">
+    <content>
+      <VBox class="sapUiMediumMargin">
+        <Panel headerText="Quotation Header">
+          <content>
+            <f:SimpleForm editable="false" layout="ResponsiveGridLayout" columnsL="2" columnsM="1">
+              <f:content>
+                <Label text="Quotation ID"/>  <Text text="{ID}"/>
+                <Label text="Customer"/>      <Text text="{customer/name}"/>
+                <Label text="Date"/>          <Text text="{quotationDate}"/>
+                <Label text="Valid Until"/>   <Text text="{validUntil}"/>
+                <Label text="Discount %"/>    <ObjectNumber number="{discountPct}" unit="%"/>
+                <Label text="Status"/>
+                <ObjectStatus text="{status}"
+                  state="{= ${status} === 'Open' ? 'Information' : ${status} === 'Accepted' ? 'Success' : 'Error'}"/>
+              </f:content>
+            </f:SimpleForm>
+          </content>
+        </Panel>
+        <Panel headerText="Quoted Items" class="sapUiSmallMarginTop">
+          <content>
+            <Table items="{items}" noDataText="No items">
+              <columns>
+                <Column><Text text="Product"/></Column>
+                <Column><Text text="Qty"/></Column>
+                <Column hAlign="End"><Text text="Unit Price (₹)"/></Column>
+                <Column hAlign="End"><Text text="Discount %"/></Column>
+                <Column hAlign="End"><Text text="Line Net (₹)"/></Column>
+              </columns>
+              <items>
+                <ColumnListItem>
+                  <cells>
+                    <Text text="{product/name}"/>
+                    <Text text="{quantity}"/>
+                    <ObjectNumber number="{unitPrice}" unit="₹" emphasized="false"/>
+                    <Text text="{discountPct}%"/>
+                    <ObjectNumber number="{lineNet}" unit="₹"/>
+                  </cells>
+                </ColumnListItem>
+              </items>
+            </Table>
+          </content>
+        </Panel>
+      </VBox>
+    </content>
+  </Page>
+</mvc:View>

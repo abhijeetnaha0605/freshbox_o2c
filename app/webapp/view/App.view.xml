@@ -1,0 +1,9 @@
+<mvc:View
+  controllerName="freshbox.o2c.app.controller.App"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  displayBlock="true">
+  <Shell>
+    <App id="app" autoFocus="false"/>
+  </Shell>
+</mvc:View>

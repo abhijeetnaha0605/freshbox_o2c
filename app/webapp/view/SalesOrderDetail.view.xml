@@ -1,0 +1,61 @@
+<mvc:View
+  controllerName="freshbox.o2c.app.controller.SalesOrderDetail"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:f="sap.ui.layout.form">
+
+  <Page title="Sales Order Detail" showNavButton="true" navButtonPress=".onNavBack">
+    <content>
+      <VBox class="sapUiMediumMargin">
+        <Panel headerText="Sales Order Header">
+          <content>
+            <f:SimpleForm editable="false" layout="ResponsiveGridLayout" columnsL="2" columnsM="1">
+              <f:content>
+                <Label text="SO ID"/>         <Text text="{ID}"/>
+                <Label text="Customer"/>      <Text text="{customer/name}"/>
+                <Label text="Order Date"/>    <Text text="{orderDate}"/>
+                <Label text="Sales Org"/>     <Text text="{salesOrg}"/>
+                <Label text="Dist Channel"/> <Text text="{distChannel}"/>
+                <Label text="Division"/>      <Text text="{division}"/>
+                <Label text="Discount %"/>    <ObjectNumber number="{discountPct}" unit="%"/>
+                <Label text="Status"/>
+                <ObjectStatus text="{status}"
+                  state="{= ${status} === 'Billed' ? 'Success' :
+                           ${status} === 'FullyDelivered' ? 'Success' :
+                           ${status} === 'PartiallyDelivered' ? 'Warning' :
+                           ${status} === 'Open' ? 'None' : 'Error'}"/>
+              </f:content>
+            </f:SimpleForm>
+          </content>
+        </Panel>
+
+        <Panel headerText="Order Items &amp; Schedule Lines" class="sapUiSmallMarginTop">
+          <content>
+            <Table items="{items}" noDataText="No items">
+              <columns>
+                <Column><Text text="Product"/></Column>
+                <Column><Text text="Total Qty"/></Column>
+                <Column><Text text="Open Qty"/></Column>
+                <Column hAlign="End"><Text text="Unit Price (₹)"/></Column>
+                <Column hAlign="End"><Text text="Discount %"/></Column>
+                <Column hAlign="End"><Text text="Line Net (₹)"/></Column>
+              </columns>
+              <items>
+                <ColumnListItem>
+                  <cells>
+                    <Text text="{product/name}"/>
+                    <Text text="{quantity}"/>
+                    <ObjectStatus text="{openQty}" state="{= ${openQty} > 0 ? 'Warning' : 'Success'}"/>
+                    <ObjectNumber number="{unitPrice}" unit="₹" emphasized="false"/>
+                    <Text text="{discountPct}%"/>
+                    <ObjectNumber number="{lineNet}" unit="₹"/>
+                  </cells>
+                </ColumnListItem>
+              </items>
+            </Table>
+          </content>
+        </Panel>
+      </VBox>
+    </content>
+  </Page>
+</mvc:View>

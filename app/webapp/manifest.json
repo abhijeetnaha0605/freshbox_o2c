@@ -1,0 +1,159 @@
+{
+  "_version": "1.58.0",
+  "sap.app": {
+    "id": "freshbox.o2c.app",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "applicationVersion": {
+      "version": "1.0.0"
+    },
+    "dataSources": {
+      "O2CService": {
+        "uri": "/api/o2c/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "4.0"
+        }
+      }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "sap-icon://meal",
+      "favIcon": ""
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.fiori": {
+    "registrationIds": [],
+    "archeType": "transactional"
+  },
+  "sap.ui5": {
+    "rootView": {
+      "viewName": "freshbox.o2c.app.view.App",
+      "type": "XML",
+      "async": true,
+      "id": "app"
+    },
+    "dependencies": {
+      "minUI5Version": "1.120.0",
+      "libs": {
+        "sap.ui.core": {},
+        "sap.m": {},
+        "sap.ui.layout": {},
+        "sap.uxap": {},
+        "sap.f": {},
+        "sap.ui.table": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "freshbox.o2c.app.i18n.i18n"
+        }
+      },
+      "": {
+        "dataSource": "O2CService",
+        "preload": true,
+        "settings": {
+          "synchronizationMode": "None",
+          "operationMode": "Server",
+          "autoExpandSelect": true,
+          "earlyRequests": true
+        }
+      }
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "viewType": "XML",
+        "viewPath": "freshbox.o2c.app.view",
+        "controlAggregation": "pages",
+        "controlId": "app",
+        "async": true
+      },
+      "routes": [
+        {
+          "pattern": "",
+          "name": "Dashboard",
+          "target": "Dashboard"
+        },
+        {
+          "pattern": "inquiries",
+          "name": "InquiryList",
+          "target": "InquiryList"
+        },
+        {
+          "pattern": "inquiries/{id}",
+          "name": "InquiryDetail",
+          "target": "InquiryDetail"
+        },
+        {
+          "pattern": "quotations",
+          "name": "QuotationList",
+          "target": "QuotationList"
+        },
+        {
+          "pattern": "quotations/{id}",
+          "name": "QuotationDetail",
+          "target": "QuotationDetail"
+        },
+        {
+          "pattern": "salesorders",
+          "name": "SalesOrderList",
+          "target": "SalesOrderList"
+        },
+        {
+          "pattern": "salesorders/{id}",
+          "name": "SalesOrderDetail",
+          "target": "SalesOrderDetail"
+        },
+        {
+          "pattern": "deliveries",
+          "name": "DeliveryList",
+          "target": "DeliveryList"
+        },
+        {
+          "pattern": "deliveries/{id}",
+          "name": "DeliveryDetail",
+          "target": "DeliveryDetail"
+        },
+        {
+          "pattern": "invoices",
+          "name": "InvoiceList",
+          "target": "InvoiceList"
+        },
+        {
+          "pattern": "invoices/{id}",
+          "name": "InvoiceDetail",
+          "target": "InvoiceDetail"
+        }
+      ],
+      "targets": {
+        "Dashboard":      { "viewName": "Dashboard",      "viewLevel": 1 },
+        "InquiryList":    { "viewName": "InquiryList",    "viewLevel": 2 },
+        "InquiryDetail":  { "viewName": "InquiryDetail",  "viewLevel": 3 },
+        "QuotationList":  { "viewName": "QuotationList",  "viewLevel": 2 },
+        "QuotationDetail":{ "viewName": "QuotationDetail","viewLevel": 3 },
+        "SalesOrderList": { "viewName": "SalesOrderList", "viewLevel": 2 },
+        "SalesOrderDetail":{"viewName":"SalesOrderDetail","viewLevel": 3 },
+        "DeliveryList":   { "viewName": "DeliveryList",   "viewLevel": 2 },
+        "DeliveryDetail": { "viewName": "DeliveryDetail", "viewLevel": 3 },
+        "InvoiceList":    { "viewName": "InvoiceList",    "viewLevel": 2 },
+        "InvoiceDetail":  { "viewName": "InvoiceDetail",  "viewLevel": 3 }
+      }
+    }
+  }
+}

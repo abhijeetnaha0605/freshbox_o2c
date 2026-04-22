@@ -1,0 +1,75 @@
+<mvc:View
+  controllerName="freshbox.o2c.app.controller.SalesOrderList"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core">
+
+  <Page title="Sales Orders" showNavButton="true" navButtonPress=".onNavBack">
+    <content>
+      <Table id="soTable"
+             items="{path: '/SalesOrders', parameters: { expand: 'customer,items/product' }}"
+             growing="true" growingThreshold="20"
+             noDataText="No Sales Orders yet. Accept a Quotation first.">
+        <columns>
+          <Column><Text text="SO ID"/></Column>
+          <Column><Text text="Customer"/></Column>
+          <Column><Text text="Order Date"/></Column>
+          <Column><Text text="Discount %"/></Column>
+          <Column><Text text="Status"/></Column>
+          <Column><Text text="Action"/></Column>
+        </columns>
+        <items>
+          <ColumnListItem type="Navigation" press=".onSOPress">
+            <cells>
+              <ObjectIdentifier title="{ID}"/>
+              <Text text="{customer/name}"/>
+              <Text text="{orderDate}"/>
+              <ObjectNumber number="{discountPct}" unit="%"/>
+              <ObjectStatus
+                text="{status}"
+                state="{= ${status} === 'Open' ? 'None' :
+                         ${status} === 'PartiallyDelivered' ? 'Warning' :
+                         ${status} === 'FullyDelivered' ? 'Success' :
+                         ${status} === 'Billed' ? 'Success' : 'Error'}"/>
+              <Button text="Create Delivery"
+                      visible="{= ${status} !== 'Billed' &amp;&amp; ${status} !== 'Cancelled'}"
+                      type="Emphasized"
+                      press=".onCreateDelivery"/>
+            </cells>
+          </ColumnListItem>
+        </items>
+      </Table>
+    </content>
+
+    <!-- Create Delivery Dialog -->
+    <Dialog id="createDeliveryDialog" title="Create Delivery" contentWidth="500px">
+      <content>
+        <SimpleForm editable="true" layout="ResponsiveGridLayout">
+          <Label text="Batch Label"/>
+          <Input id="dlvBatchLabel" placeholder="e.g. Lunch Batch – Day 1"/>
+          <Label text="Planned Date"/>
+          <DatePicker id="dlvPlannedDate"/>
+          <Label text="Items to Deliver"/>
+          <List id="dlvItemList" noDataText="Loading items...">
+            <CustomListItem>
+              <HBox alignItems="Center" class="sapUiSmallMargin">
+                <VBox width="60%">
+                  <Text text="{product/name}"/>
+                  <Text text="{= 'Open Qty: ' + ${openQty}}"/>
+                </VBox>
+                <StepInput id="{ID}-qty" min="0" max="{openQty}" value="{openQty}" width="120px"/>
+              </HBox>
+            </CustomListItem>
+          </List>
+        </SimpleForm>
+      </content>
+      <beginButton>
+        <Button text="Create Delivery" type="Emphasized" press=".onConfirmDelivery"/>
+      </beginButton>
+      <endButton>
+        <Button text="Cancel" press=".onCancelDeliveryDialog"/>
+      </endButton>
+    </Dialog>
+
+  </Page>
+</mvc:View>

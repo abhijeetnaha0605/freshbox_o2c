@@ -1,0 +1,6 @@
+ID,name,description,basePrice,uom,gstRate,stockQty
+MEAL-VEG,Veg Meal Box,"Full vegetarian meal: rice, dal, 2 sabzi, salad, roti",180.00,EA,5.00,500
+MEAL-NVG,Non-Veg Meal Box,"Chicken/fish meal: rice, curry, salad, roti",220.00,EA,5.00,400
+MEAL-PRE,Premium Meal Box,"Chef-special 4-course meal with dessert",320.00,EA,5.00,200
+SNACK-PM,Evening Snack Pack,"Samosa, chai, fruit bowl",80.00,EA,18.00,300
+BRKFT-01,Breakfast Box,"Idli/Poha, sambhar, chutney, juice",120.00,EA,5.00,250

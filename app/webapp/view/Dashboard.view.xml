@@ -1,0 +1,115 @@
+<mvc:View
+  controllerName="freshbox.o2c.app.controller.Dashboard"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:f="sap.f"
+  xmlns:card="sap.f.cards"
+  xmlns:l="sap.ui.layout"
+  xmlns:core="sap.ui.core">
+
+  <Page title="FreshBox Foods – O2C Dashboard" showNavButton="false">
+    <content>
+      <VBox class="sapUiMediumMargin">
+
+        <!-- Header Banner -->
+        <Panel class="sapUiSmallMarginBottom" backgroundDesign="Transparent">
+          <content>
+            <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiSmallMarginBottom">
+              <VBox>
+                <Title text="Order-to-Cash (O2C) Process" level="H1"/>
+                <Text text="FreshBox Foods — Cloud Kitchen ERP on SAP BTP CAP"/>
+              </VBox>
+              <Image src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/SAP_2011_logo.svg/200px-SAP_2011_logo.svg.png"
+                     height="40px" decorative="true"/>
+            </HBox>
+          </content>
+        </Panel>
+
+        <!-- O2C Flow Steps -->
+        <Title text="Document Flow" level="H2" class="sapUiSmallMarginBottom"/>
+        <HBox wrap="Wrap" justifyContent="SpaceBetween" class="sapUiSmallMarginBottom">
+
+          <!-- Step tiles -->
+          <GenericTile class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+            header="1. Inquiry" subheader="VA11 — Customer Request"
+            tileContent="" press=".onNavToInquiries">
+            <tileContent>
+              <TileContent footer="VA11">
+                <content><NumericContent value="{/inquiryCount}" icon="sap-icon://question-mark"/></content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+          <GenericTile class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+            header="2. Quotation" subheader="VA21 — Price Offer + Discount"
+            press=".onNavToQuotations">
+            <tileContent>
+              <TileContent footer="VA21">
+                <content><NumericContent value="{/quotationCount}" icon="sap-icon://sales-quote"/></content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+          <GenericTile class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+            header="3. Sales Order" subheader="VA01 — Confirmed Order"
+            press=".onNavToSalesOrders">
+            <tileContent>
+              <TileContent footer="VA01">
+                <content><NumericContent value="{/salesOrderCount}" icon="sap-icon://sales-order"/></content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+          <GenericTile class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+            header="4. Delivery" subheader="VL01N — Goods Issue"
+            press=".onNavToDeliveries">
+            <tileContent>
+              <TileContent footer="VL01N">
+                <content><NumericContent value="{/deliveryCount}" icon="sap-icon://shipping-status"/></content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+          <GenericTile class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+            header="5. Invoice" subheader="VF01 — GST Billing"
+            press=".onNavToInvoices">
+            <tileContent>
+              <TileContent footer="VF01">
+                <content><NumericContent value="{/invoiceCount}" icon="sap-icon://invoice"/></content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+        </HBox>
+
+        <!-- Quick Actions -->
+        <Title text="Quick Actions" level="H2" class="sapUiSmallMarginBottom"/>
+        <HBox wrap="Wrap">
+          <Button text="+ New Inquiry" type="Emphasized" press=".onNewInquiry"
+                  class="sapUiSmallMarginEnd sapUiSmallMarginBottom" icon="sap-icon://add"/>
+          <Button text="View Deliveries" press=".onNavToDeliveries"
+                  class="sapUiSmallMarginEnd sapUiSmallMarginBottom" icon="sap-icon://shipping-status"/>
+          <Button text="Create Invoice" press=".onNavToInvoices"
+                  class="sapUiSmallMarginEnd sapUiSmallMarginBottom" icon="sap-icon://invoice"/>
+        </HBox>
+
+        <!-- Business Scenario -->
+        <Panel headerText="Business Scenario — TechPark Cafeteria × FreshBox Foods"
+               expandable="true" expanded="true"
+               class="sapUiMediumMarginTop">
+          <content>
+            <VBox class="sapUiSmallMargin">
+              <Text text="TechPark Cafeteria orders 120 Meal Boxes: 60 for Lunch (Day 1) + 60 for Dinner (Day 2)."/>
+              <Text text="FreshBox Foods provides a 15% volume discount for 100+ meals." class="sapUiSmallMarginTop"/>
+              <Text text="GST at 5% is applied on food items per Indian tax rules." class="sapUiSmallMarginTop"/>
+              <Text text="Both deliveries are consolidated into one invoice with full GST breakup (CGST + SGST)." class="sapUiSmallMarginTop"/>
+              <MessageStrip
+                text="Follow the numbered tiles above left-to-right to walk through the full O2C cycle."
+                type="Information" showIcon="true" class="sapUiMediumMarginTop"/>
+            </VBox>
+          </content>
+        </Panel>
+
+      </VBox>
+    </content>
+  </Page>
+</mvc:View>

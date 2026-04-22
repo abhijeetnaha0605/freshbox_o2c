@@ -1,0 +1,109 @@
+<mvc:View
+  controllerName="freshbox.o2c.app.controller.InquiryList"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core">
+
+  <Page title="Inquiries" showNavButton="true" navButtonPress=".onNavBack">
+    <headerContent>
+      <Button text="+ New Inquiry" type="Emphasized" press=".onCreateInquiry" icon="sap-icon://add"/>
+    </headerContent>
+    <content>
+      <Table id="inquiryTable"
+             items="{path: '/Inquiries', parameters: { expand: 'customer,items' }}"
+             mode="SingleSelectMaster"
+             selectionChange=".onSelectInquiry"
+             growing="true" growingThreshold="20"
+             noDataText="No inquiries yet. Create one to start the O2C cycle.">
+        <columns>
+          <Column><Text text="Inquiry ID"/></Column>
+          <Column><Text text="Customer"/></Column>
+          <Column><Text text="Date"/></Column>
+          <Column><Text text="Valid Until"/></Column>
+          <Column><Text text="Items"/></Column>
+          <Column><Text text="Status"/></Column>
+          <Column><Text text="Action"/></Column>
+        </columns>
+        <items>
+          <ColumnListItem type="Navigation" press=".onInquiryPress">
+            <cells>
+              <ObjectIdentifier title="{ID}"/>
+              <Text text="{customer/name}"/>
+              <Text text="{inquiryDate}"/>
+              <Text text="{validUntil}"/>
+              <Text text="{= ${items}.length + ' item(s)' }"/>
+              <ObjectStatus
+                text="{status}"
+                state="{= ${status} === 'Open' ? 'Information' : ${status} === 'Converted' ? 'Success' : 'Error'}"/>
+              <Button text="Convert to Quotation"
+                      visible="{= ${status} === 'Open'}"
+                      press=".onConvertToQuotation"
+                      type="Emphasized"/>
+            </cells>
+          </ColumnListItem>
+        </items>
+      </Table>
+    </content>
+
+    <!-- Create Inquiry Dialog -->
+    <Dialog id="createInquiryDialog" title="New Inquiry" contentWidth="500px">
+      <content>
+        <SimpleForm editable="true" layout="ResponsiveGridLayout">
+          <Label text="Customer"/>
+          <Select id="inqCustomerSelect" items="{path: '/Customers'}">
+            <core:Item key="{ID}" text="{name}"/>
+          </Select>
+          <Label text="Valid Until"/>
+          <DatePicker id="inqValidUntil"/>
+          <Label text="Notes"/>
+          <TextArea id="inqNotes" rows="3"/>
+        </SimpleForm>
+      </content>
+      <beginButton>
+        <Button text="Create" type="Emphasized" press=".onConfirmCreateInquiry"/>
+      </beginButton>
+      <endButton>
+        <Button text="Cancel" press=".onCancelDialog"/>
+      </endButton>
+    </Dialog>
+
+    <!-- Add Item Dialog -->
+    <Dialog id="addItemDialog" title="Add Item to Inquiry" contentWidth="450px">
+      <content>
+        <SimpleForm editable="true" layout="ResponsiveGridLayout">
+          <Label text="Product"/>
+          <Select id="inqItemProduct" items="{path: '/Products'}">
+            <core:Item key="{ID}" text="{name}"/>
+          </Select>
+          <Label text="Requested Quantity"/>
+          <StepInput id="inqItemQty" min="1" max="9999" value="1"/>
+        </SimpleForm>
+      </content>
+      <beginButton>
+        <Button text="Add" type="Emphasized" press=".onConfirmAddItem"/>
+      </beginButton>
+      <endButton>
+        <Button text="Cancel" press=".onCancelItemDialog"/>
+      </endButton>
+    </Dialog>
+
+    <!-- Convert to Quotation Dialog -->
+    <Dialog id="convertDialog" title="Convert to Quotation" contentWidth="400px">
+      <content>
+        <SimpleForm editable="true" layout="ResponsiveGridLayout">
+          <Label text="Volume Discount (%)"/>
+          <StepInput id="discountPctInput" min="0" max="100" value="15" step="1"/>
+          <Label text=""/>
+          <MessageStrip text="15% discount for 100+ meal boxes" type="Information" showIcon="true"/>
+        </SimpleForm>
+      </content>
+      <beginButton>
+        <Button text="Convert" type="Emphasized" press=".onConfirmConvert"/>
+      </beginButton>
+      <endButton>
+        <Button text="Cancel" press=".onCancelConvertDialog"/>
+      </endButton>
+    </Dialog>
+
+  </Page>
+</mvc:View>

@@ -1,0 +1,13 @@
+{
+  "name": "freshbox-o2c-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "FreshBox O2C Fiori UI",
+  "scripts": {
+    "start": "fiori run --open index.html",
+    "build": "ui5 build --config ui5.yaml --clean-dest --dest dist"
+  },
+  "devDependencies": {
+    "@sap/ux-ui5-tooling": "^1"
+  }
+}

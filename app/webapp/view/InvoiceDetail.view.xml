@@ -1,0 +1,98 @@
+<mvc:View
+  controllerName="freshbox.o2c.app.controller.InvoiceDetail"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:f="sap.ui.layout.form"
+  xmlns:l="sap.ui.layout">
+
+  <Page title="Invoice Detail" showNavButton="true" navButtonPress=".onNavBack">
+    <content>
+      <VBox class="sapUiMediumMargin">
+
+        <!-- Header -->
+        <Panel headerText="Invoice Header" expandable="false">
+          <content>
+            <f:SimpleForm editable="false" layout="ResponsiveGridLayout" columnsL="2" columnsM="1">
+              <f:content>
+                <Label text="Invoice ID"/>    <Text text="{ID}"/>
+                <Label text="Customer"/>      <Text text="{customer/name}"/>
+                <Label text="GSTIN"/>         <Text text="{customer/gstin}"/>
+                <Label text="Invoice Date"/>  <Text text="{invoiceDate}"/>
+                <Label text="Due Date"/>      <Text text="{dueDate}"/>
+                <Label text="Status"/>
+                <ObjectStatus
+                  text="{status}"
+                  state="{= ${status} === 'Paid' ? 'Success' : ${status} === 'Open' ? 'Warning' : 'Error'}"/>
+              </f:content>
+            </f:SimpleForm>
+          </content>
+        </Panel>
+
+        <!-- Line Items -->
+        <Panel headerText="Line Items" expandable="false" class="sapUiSmallMarginTop">
+          <content>
+            <Table items="{items}" noDataText="No items">
+              <columns>
+                <Column><Text text="Product"/></Column>
+                <Column><Text text="Qty"/></Column>
+                <Column hAlign="End"><Text text="Unit Price (₹)"/></Column>
+                <Column hAlign="End"><Text text="Discount %"/></Column>
+                <Column hAlign="End"><Text text="Net (₹)"/></Column>
+                <Column hAlign="End"><Text text="GST Rate"/></Column>
+                <Column hAlign="End"><Text text="GST (₹)"/></Column>
+                <Column hAlign="End"><Text text="Total (₹)"/></Column>
+              </columns>
+              <items>
+                <ColumnListItem>
+                  <cells>
+                    <Text text="{product/name}"/>
+                    <Text text="{quantity}"/>
+                    <ObjectNumber number="{unitPrice}" unit="₹" emphasized="false"/>
+                    <Text text="{discountPct}%"/>
+                    <ObjectNumber number="{lineNet}" unit="₹" emphasized="false"/>
+                    <Text text="{gstRate}%"/>
+                    <ObjectNumber number="{lineGst}" unit="₹" emphasized="false"/>
+                    <ObjectNumber number="{lineTotal}" unit="₹"/>
+                  </cells>
+                </ColumnListItem>
+              </items>
+            </Table>
+          </content>
+        </Panel>
+
+        <!-- GST Summary -->
+        <Panel headerText="Tax Summary (GST)" expandable="false" class="sapUiSmallMarginTop">
+          <content>
+            <f:SimpleForm editable="false" layout="ResponsiveGridLayout" columnsL="2" columnsM="1">
+              <f:content>
+                <Label text="Gross Amount"/>   <ObjectNumber number="{baseAmount}"  unit="₹"/>
+                <Label text="Discount (-)"/>   <ObjectNumber number="{discountAmt}" unit="₹"/>
+                <Label text="Net Amount"/>      <ObjectNumber number="{netAmount}"   unit="₹"/>
+                <Label text="CGST (2.5%)"/>    <ObjectNumber number="{cgst}"        unit="₹"/>
+                <Label text="SGST (2.5%)"/>    <ObjectNumber number="{sgst}"        unit="₹"/>
+                <Label text="IGST"/>           <ObjectNumber number="{igst}"        unit="₹"/>
+                <Label text="Total Payable"/>
+                <ObjectNumber number="{totalAmount}" unit="₹" emphasized="true"
+                              state="Warning"/>
+              </f:content>
+            </f:SimpleForm>
+          </content>
+        </Panel>
+
+        <!-- Linked Deliveries -->
+        <Panel headerText="Linked Deliveries" expandable="true" class="sapUiSmallMarginTop">
+          <content>
+            <List items="{deliveries}" noDataText="No linked deliveries">
+              <StandardListItem
+                title="{delivery/ID}"
+                description="{delivery/batchLabel}"
+                info="{delivery/status}"
+                infoState="{= ${delivery/status} === 'GoodsIssued' ? 'Success' : 'None'}"/>
+            </List>
+          </content>
+        </Panel>
+
+      </VBox>
+    </content>
+  </Page>
+</mvc:View>

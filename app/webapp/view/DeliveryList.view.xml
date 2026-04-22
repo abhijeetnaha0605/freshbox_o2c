@@ -1,0 +1,75 @@
+<mvc:View
+  controllerName="freshbox.o2c.app.controller.DeliveryList"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m">
+
+  <Page title="Deliveries" showNavButton="true" navButtonPress=".onNavBack">
+    <headerContent>
+      <Button text="Create Invoice from Selected"
+              type="Emphasized"
+              press=".onCreateInvoice"
+              icon="sap-icon://invoice"/>
+    </headerContent>
+    <content>
+      <Table id="deliveryTable"
+             items="{path: '/Deliveries', parameters: { expand: 'customer,items/product,salesOrder' }}"
+             mode="MultiSelect"
+             growing="true" growingThreshold="20"
+             noDataText="No deliveries yet. Create a delivery from a Sales Order first.">
+        <columns>
+          <Column><Text text="Delivery ID"/></Column>
+          <Column><Text text="Sales Order"/></Column>
+          <Column><Text text="Customer"/></Column>
+          <Column><Text text="Batch Label"/></Column>
+          <Column><Text text="Planned Date"/></Column>
+          <Column><Text text="Actual Date"/></Column>
+          <Column><Text text="Status"/></Column>
+          <Column><Text text="Action"/></Column>
+        </columns>
+        <items>
+          <ColumnListItem type="Navigation" press=".onDeliveryPress">
+            <cells>
+              <ObjectIdentifier title="{ID}"/>
+              <Text text="{salesOrder/ID}"/>
+              <Text text="{customer/name}"/>
+              <Text text="{batchLabel}"/>
+              <Text text="{plannedDate}"/>
+              <Text text="{actualDate}"/>
+              <ObjectStatus
+                text="{status}"
+                state="{= ${status} === 'GoodsIssued' ? 'Success' :
+                         ${status} === 'Pending' ? 'None' :
+                         ${status} === 'Cancelled' ? 'Error' : 'Warning'}"/>
+              <Button text="Post Goods Issue"
+                      type="Emphasized"
+                      visible="{= ${status} === 'Pending' || ${status} === 'Picked' || ${status} === 'Packed'}"
+                      press=".onPostGI"/>
+            </cells>
+          </ColumnListItem>
+        </items>
+      </Table>
+    </content>
+
+    <!-- Invoice Creation Dialog -->
+    <Dialog id="invoiceDialog" title="Create Invoice" contentWidth="450px">
+      <content>
+        <SimpleForm editable="true" layout="ResponsiveGridLayout">
+          <Label text="Invoice Date"/>
+          <DatePicker id="invDate"/>
+          <Label text="Due Date (Payment)"/>
+          <DatePicker id="invDueDate"/>
+          <Label text=""/>
+          <MessageStrip
+            text="Selected GoodsIssued deliveries will be combined into one invoice with GST."
+            type="Information" showIcon="true"/>
+        </SimpleForm>
+      </content>
+      <beginButton>
+        <Button text="Create Invoice" type="Emphasized" press=".onConfirmInvoice"/>
+      </beginButton>
+      <endButton>
+        <Button text="Cancel" press=".onCancelInvoiceDialog"/>
+      </endButton>
+    </Dialog>
+  </Page>
+</mvc:View>

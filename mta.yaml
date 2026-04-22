@@ -1,0 +1,93 @@
+_schema-version: "3.1"
+ID: freshbox-o2c
+description: FreshBox Foods – Order-to-Cash on SAP BTP CAP
+version: 1.0.0
+
+modules:
+
+  # ── CAP Backend ──────────────────────────────────────────────────
+  - name: freshbox-o2c-srv
+    type: nodejs
+    path: .
+    parameters:
+      buildpack: nodejs_buildpack
+      disk-quota: 512M
+      memory: 256M
+    build-parameters:
+      builder: npm
+      build-result: gen/srv
+      requires:
+        - name: freshbox-o2c-db-deployer
+    provides:
+      - name: srv-api
+        properties:
+          srv-url: ${default-url}
+    requires:
+      - name: freshbox-o2c-db
+      - name: freshbox-o2c-auth
+
+  # ── Database deployer ────────────────────────────────────────────
+  - name: freshbox-o2c-db-deployer
+    type: hdb
+    path: gen/db
+    parameters:
+      buildpack: nodejs_buildpack
+    requires:
+      - name: freshbox-o2c-db
+
+  # ── Fiori UI (HTML5 App) ─────────────────────────────────────────
+  - name: freshbox-o2c-app
+    type: html5
+    path: app
+    build-parameters:
+      build-result: webapp
+      builder: custom
+      commands:
+        - npm install
+      supported-platforms: []
+    requires:
+      - name: srv-api
+        group: destinations
+        properties:
+          forwardAuthToken: true
+          name: srv-api
+          url: ~{srv-url}
+
+  # ── App Router ───────────────────────────────────────────────────
+  - name: freshbox-o2c-approuter
+    type: approuter.nodejs
+    path: app
+    parameters:
+      keep-existing-routes: true
+      disk-quota: 256M
+      memory: 128M
+    requires:
+      - name: freshbox-o2c-auth
+      - name: srv-api
+        group: destinations
+        properties:
+          forwardAuthToken: true
+          name: srv-api
+          url: ~{srv-url}
+
+resources:
+
+  # ── SAP HANA Cloud (or HDI Container) ───────────────────────────
+  - name: freshbox-o2c-db
+    type: com.sap.xs.hdi-container
+    parameters:
+      service: hana
+      service-plan: hdi-shared
+    properties:
+      hdi-service-name: ${service-name}
+
+  # ── XSUAA (Authentication) ───────────────────────────────────────
+  - name: freshbox-o2c-auth
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
+      config:
+        xsappname: freshbox-o2c-${org}-${space}
+        tenant-mode: dedicated

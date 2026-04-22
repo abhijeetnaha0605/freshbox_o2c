@@ -1,0 +1,140 @@
+### FreshBox O2C – HTTP Test Suite
+### Use with VSCode REST Client extension or import into Thunder Client
+### Base URL: http://localhost:4004
+
+@base = http://localhost:4004/api/o2c
+
+### ─── MASTER DATA ──────────────────────────────────────────────────────
+
+### Get all Customers
+GET {{base}}/Customers
+
+### Get all Products
+GET {{base}}/Products
+
+### ─── STEP 1: CREATE INQUIRY ───────────────────────────────────────────
+
+### Create Inquiry INQ000001
+POST {{base}}/Inquiries
+Content-Type: application/json
+
+{
+  "ID": "INQ000001",
+  "customer_ID": "TECH01",
+  "inquiryDate": "2025-01-15",
+  "validUntil": "2025-01-22",
+  "notes": "Need 120 meal boxes for 2 days – Lunch and Dinner",
+  "status": "Open",
+  "items": [
+    { "product_ID": "MEAL-VEG", "requestedQty": 80 },
+    { "product_ID": "MEAL-NVG", "requestedQty": 40 }
+  ]
+}
+
+### List all Inquiries
+GET {{base}}/Inquiries?$expand=customer,items($expand=product)
+
+### ─── STEP 2: CONVERT TO QUOTATION ────────────────────────────────────
+
+### Convert Inquiry to Quotation with 15% discount
+POST {{base}}/Inquiries('INQ000001')/O2CService.convertToQuotation
+Content-Type: application/json
+
+{ "discountPct": 15 }
+
+### List all Quotations
+GET {{base}}/Quotations?$expand=customer,items($expand=product)
+
+### ─── STEP 3: ACCEPT QUOTATION → SALES ORDER ──────────────────────────
+
+### Accept Quotation (use ID from step 2 response, e.g. QT000001)
+POST {{base}}/Quotations('QT000001')/O2CService.acceptQuotation
+Content-Type: application/json
+
+{}
+
+### List Sales Orders
+GET {{base}}/SalesOrders?$expand=customer,items($expand=product)
+
+### Get SO Items (to find UUIDs for delivery)
+GET {{base}}/SalesOrderItems?$filter=salesOrder_ID eq 'SO000001'&$expand=product
+
+### ─── STEP 4A: DELIVERY 1 – LUNCH BATCH ───────────────────────────────
+
+### Create Delivery 1 (replace UUIDs with actual from SO items response)
+POST {{base}}/SalesOrders('SO000001')/O2CService.createDelivery
+Content-Type: application/json
+
+{
+  "batchLabel": "Lunch Batch – Day 1",
+  "plannedDate": "2025-01-16",
+  "items": [
+    { "soItemId": "REPLACE-WITH-VEG-ITEM-UUID", "qty": 40 },
+    { "soItemId": "REPLACE-WITH-NVG-ITEM-UUID", "qty": 20 }
+  ]
+}
+
+### Post Goods Issue – Delivery 1
+POST {{base}}/Deliveries('DL000001')/O2CService.postGoodsIssue
+Content-Type: application/json
+
+{}
+
+### ─── STEP 4B: DELIVERY 2 – DINNER BATCH ──────────────────────────────
+
+### Create Delivery 2
+POST {{base}}/SalesOrders('SO000001')/O2CService.createDelivery
+Content-Type: application/json
+
+{
+  "batchLabel": "Dinner Batch – Day 2",
+  "plannedDate": "2025-01-17",
+  "items": [
+    { "soItemId": "REPLACE-WITH-VEG-ITEM-UUID", "qty": 40 },
+    { "soItemId": "REPLACE-WITH-NVG-ITEM-UUID", "qty": 20 }
+  ]
+}
+
+### Post Goods Issue – Delivery 2
+POST {{base}}/Deliveries('DL000002')/O2CService.postGoodsIssue
+Content-Type: application/json
+
+{}
+
+### List Deliveries
+GET {{base}}/Deliveries?$expand=customer,items($expand=product)
+
+### ─── STEP 5: CREATE INVOICE ───────────────────────────────────────────
+
+### Create Invoice from both deliveries
+POST {{base}}/createInvoiceFromDeliveries
+Content-Type: application/json
+
+{
+  "deliveryIds": ["DL000001", "DL000002"],
+  "invoiceDate": "2025-01-17",
+  "dueDate": "2025-02-16"
+}
+
+### View Invoice with full GST breakup
+GET {{base}}/Invoices?$expand=customer,items($expand=product),deliveries($expand=delivery)
+
+### ─── STEP 6: MARK PAID ────────────────────────────────────────────────
+
+### Mark Invoice as Paid
+POST {{base}}/Invoices('IV000001')/O2CService.markPaid
+Content-Type: application/json
+
+{}
+
+### ─── VERIFY DOCUMENT FLOW ─────────────────────────────────────────────
+
+### Final state of all documents
+GET {{base}}/Inquiries('INQ000001')
+GET {{base}}/Quotations('QT000001')
+GET {{base}}/SalesOrders('SO000001')
+GET {{base}}/Deliveries?$filter=salesOrder_ID eq 'SO000001'
+GET {{base}}/Invoices
+
+### Check stock was reduced after GI
+GET {{base}}/Products

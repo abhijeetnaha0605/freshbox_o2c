@@ -1,0 +1,45 @@
+<mvc:View
+  controllerName="freshbox.o2c.app.controller.QuotationList"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m">
+
+  <Page title="Quotations" showNavButton="true" navButtonPress=".onNavBack">
+    <content>
+      <Table id="quotationTable"
+             items="{path: '/Quotations', parameters: { expand: 'customer,items/product' }}"
+             growing="true" growingThreshold="20"
+             noDataText="No quotations yet. Convert an Inquiry first.">
+        <columns>
+          <Column><Text text="Quotation ID"/></Column>
+          <Column><Text text="Customer"/></Column>
+          <Column><Text text="Date"/></Column>
+          <Column><Text text="Discount %"/></Column>
+          <Column><Text text="Status"/></Column>
+          <Column><Text text="Actions"/></Column>
+        </columns>
+        <items>
+          <ColumnListItem type="Navigation" press=".onQuotationPress">
+            <cells>
+              <ObjectIdentifier title="{ID}"/>
+              <Text text="{customer/name}"/>
+              <Text text="{quotationDate}"/>
+              <ObjectNumber number="{discountPct}" unit="%"/>
+              <ObjectStatus
+                text="{status}"
+                state="{= ${status} === 'Open' ? 'Information' : ${status} === 'Accepted' ? 'Success' : ${status} === 'Rejected' ? 'Error' : 'Warning'}"/>
+              <HBox>
+                <Button text="Accept → SO" type="Emphasized"
+                        visible="{= ${status} === 'Open'}"
+                        press=".onAcceptQuotation"
+                        class="sapUiSmallMarginEnd"/>
+                <Button text="Reject" type="Reject"
+                        visible="{= ${status} === 'Open'}"
+                        press=".onRejectQuotation"/>
+              </HBox>
+            </cells>
+          </ColumnListItem>
+        </items>
+      </Table>
+    </content>
+  </Page>
+</mvc:View>

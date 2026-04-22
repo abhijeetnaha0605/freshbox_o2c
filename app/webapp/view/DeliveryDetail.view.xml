@@ -1,0 +1,51 @@
+<mvc:View
+  controllerName="freshbox.o2c.app.controller.DeliveryDetail"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:f="sap.ui.layout.form">
+
+  <Page title="Delivery Detail" showNavButton="true" navButtonPress=".onNavBack">
+    <content>
+      <VBox class="sapUiMediumMargin">
+        <Panel headerText="Delivery Header">
+          <content>
+            <f:SimpleForm editable="false" layout="ResponsiveGridLayout" columnsL="2" columnsM="1">
+              <f:content>
+                <Label text="Delivery ID"/>   <Text text="{ID}"/>
+                <Label text="Sales Order"/>   <Text text="{salesOrder/ID}"/>
+                <Label text="Customer"/>      <Text text="{customer/name}"/>
+                <Label text="Batch Label"/>   <Text text="{batchLabel}"/>
+                <Label text="Planned Date"/>  <Text text="{plannedDate}"/>
+                <Label text="Actual Date"/>   <Text text="{actualDate}"/>
+                <Label text="Status"/>
+                <ObjectStatus text="{status}"
+                  state="{= ${status} === 'GoodsIssued' ? 'Success' :
+                           ${status} === 'Pending' ? 'None' : 'Error'}"/>
+              </f:content>
+            </f:SimpleForm>
+          </content>
+        </Panel>
+        <Panel headerText="Delivery Items" class="sapUiSmallMarginTop">
+          <content>
+            <Table items="{items}" noDataText="No items">
+              <columns>
+                <Column><Text text="Product"/></Column>
+                <Column><Text text="Delivered Qty"/></Column>
+                <Column hAlign="End"><Text text="Unit Price (₹)"/></Column>
+              </columns>
+              <items>
+                <ColumnListItem>
+                  <cells>
+                    <Text text="{product/name}"/>
+                    <Text text="{deliveredQty}"/>
+                    <ObjectNumber number="{unitPrice}" unit="₹" emphasized="false"/>
+                  </cells>
+                </ColumnListItem>
+              </items>
+            </Table>
+          </content>
+        </Panel>
+      </VBox>
+    </content>
+  </Page>
+</mvc:View>

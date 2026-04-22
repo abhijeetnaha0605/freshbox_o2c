@@ -1,0 +1,36 @@
+{
+  "name": "freshbox-o2c",
+  "version": "1.0.0",
+  "description": "FreshBox Foods – Order-to-Cash (O2C) on SAP BTP CAP",
+  "repository": "https://github.com/your-org/freshbox-o2c",
+  "license": "Apache-2.0",
+  "private": true,
+  "dependencies": {
+    "@sap/cds": "^7",
+    "@sap/cds-dk": "^7",
+    "express": "^4"
+  },
+  "devDependencies": {
+    "@cap-js/sqlite": "^1",
+    "@sap/eslint-plugin-cds": "^3"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "dev": "cds watch",
+    "build": "cds build --production",
+    "test": "echo \"No tests yet\" && exit 0"
+  },
+  "cds": {
+    "requires": {
+      "db": {
+        "kind": "sqlite",
+        "credentials": {
+          "database": ":memory:"
+        }
+      }
+    },
+    "features": {
+      "fetch_csrf": true
+    }
+  }
+}

@@ -1,0 +1,49 @@
+<mvc:View
+  controllerName="freshbox.o2c.app.controller.InquiryDetail"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:f="sap.ui.layout.form">
+
+  <Page title="Inquiry Detail" showNavButton="true" navButtonPress=".onNavBack">
+    <content>
+      <VBox class="sapUiMediumMargin">
+        <Panel headerText="Inquiry Header">
+          <content>
+            <f:SimpleForm editable="false" layout="ResponsiveGridLayout" columnsL="2" columnsM="1">
+              <f:content>
+                <Label text="Inquiry ID"/>    <Text text="{ID}"/>
+                <Label text="Customer"/>      <Text text="{customer/name}"/>
+                <Label text="Date"/>          <Text text="{inquiryDate}"/>
+                <Label text="Valid Until"/>   <Text text="{validUntil}"/>
+                <Label text="Status"/>
+                <ObjectStatus text="{status}"
+                  state="{= ${status} === 'Open' ? 'Information' : ${status} === 'Converted' ? 'Success' : 'Error'}"/>
+                <Label text="Notes"/>         <Text text="{notes}"/>
+              </f:content>
+            </f:SimpleForm>
+          </content>
+        </Panel>
+        <Panel headerText="Requested Items" class="sapUiSmallMarginTop">
+          <content>
+            <Table items="{items}" noDataText="No items">
+              <columns>
+                <Column><Text text="Product"/></Column>
+                <Column><Text text="Requested Qty"/></Column>
+                <Column><Text text="Notes"/></Column>
+              </columns>
+              <items>
+                <ColumnListItem>
+                  <cells>
+                    <Text text="{product/name}"/>
+                    <Text text="{requestedQty}"/>
+                    <Text text="{notes}"/>
+                  </cells>
+                </ColumnListItem>
+              </items>
+            </Table>
+          </content>
+        </Panel>
+      </VBox>
+    </content>
+  </Page>
+</mvc:View>

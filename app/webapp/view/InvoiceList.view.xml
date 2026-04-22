@@ -1,0 +1,46 @@
+<mvc:View
+  controllerName="freshbox.o2c.app.controller.InvoiceList"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m">
+
+  <Page title="Invoices" showNavButton="true" navButtonPress=".onNavBack">
+    <content>
+      <Table id="invoiceTable"
+             items="{path: '/Invoices', parameters: { expand: 'customer,items/product' }}"
+             growing="true" growingThreshold="20"
+             noDataText="No invoices yet. Select GoodsIssued deliveries and create an invoice.">
+        <columns>
+          <Column><Text text="Invoice ID"/></Column>
+          <Column><Text text="Customer"/></Column>
+          <Column><Text text="Invoice Date"/></Column>
+          <Column><Text text="Due Date"/></Column>
+          <Column><Text text="Status"/></Column>
+          <Column><Text text="Actions"/></Column>
+        </columns>
+        <items>
+          <ColumnListItem type="Navigation" press=".onInvoicePress">
+            <cells>
+              <ObjectIdentifier title="{ID}"/>
+              <Text text="{customer/name}"/>
+              <Text text="{invoiceDate}"/>
+              <Text text="{dueDate}"/>
+              <ObjectStatus
+                text="{status}"
+                state="{= ${status} === 'Paid' ? 'Success' :
+                         ${status} === 'Open' ? 'Warning' : 'Error'}"/>
+              <HBox>
+                <Button text="Mark Paid" type="Accept"
+                        visible="{= ${status} === 'Open'}"
+                        press=".onMarkPaid"
+                        class="sapUiSmallMarginEnd"/>
+                <Button text="Cancel" type="Reject"
+                        visible="{= ${status} === 'Open'}"
+                        press=".onCancelInvoice"/>
+              </HBox>
+            </cells>
+          </ColumnListItem>
+        </items>
+      </Table>
+    </content>
+  </Page>
+</mvc:View>

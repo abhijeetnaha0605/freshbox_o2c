@@ -1,0 +1,46 @@
+{
+  "xsappname": "freshbox-o2c",
+  "tenant-mode": "dedicated",
+  "description": "FreshBox O2C Security",
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.O2CRead",
+      "description": "Read O2C documents"
+    },
+    {
+      "name": "$XSAPPNAME.O2CWrite",
+      "description": "Create/Update O2C documents"
+    }
+  ],
+  "role-templates": [
+    {
+      "name": "O2CViewer",
+      "description": "View all O2C documents",
+      "scope-references": ["$XSAPPNAME.O2CRead"]
+    },
+    {
+      "name": "O2CProcessor",
+      "description": "Full access to O2C documents",
+      "scope-references": [
+        "$XSAPPNAME.O2CRead",
+        "$XSAPPNAME.O2CWrite"
+      ]
+    }
+  ],
+  "role-collections": [
+    {
+      "name": "FreshBox_Viewer",
+      "description": "FreshBox O2C Viewer",
+      "role-template-references": [
+        "$XSAPPNAME.O2CViewer"
+      ]
+    },
+    {
+      "name": "FreshBox_Processor",
+      "description": "FreshBox O2C Processor (Full Access)",
+      "role-template-references": [
+        "$XSAPPNAME.O2CProcessor"
+      ]
+    }
+  ]
+}
